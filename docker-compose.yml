@@ -1,0 +1,52 @@
+services:
+  web:
+    image: ${DOCKER_REGISTRY-}web
+    build:
+      context: .
+      dockerfile: src/Web/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:5000;https://0.0.0.0:5001
+      - ConnectionStrings__FileManagerDb=Server=db;Port=5432;Database=FileManagerDb;Username=postgres;Password=password;
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://0.0.0.0:5000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - db
+      - redis
+ 
+  db:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: FileManagerDb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    command: ['redis-server', '--save', '60', '1', '--appendonly', 'yes']
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
