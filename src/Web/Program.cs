@@ -30,6 +30,8 @@ app.UseSwaggerUi(settings =>
     settings.DocumentPath = "/api/specification.json";
 });
 
+app.UseAuthentication();       // Authentication middleware (JWT or others)
+app.UseAuthorization();        // Authorization middleware (policies, roles, etc.)
 
 app.UseExceptionHandler(options => { });
 

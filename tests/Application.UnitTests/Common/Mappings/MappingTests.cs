@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 using AutoMapper;
 using FileManager.Application.Common.Interfaces;
 using FileManager.Application.Common.Models;
-using FileManager.Application.TodoItems.Queries.GetTodoItemsWithPagination;
-using FileManager.Application.TodoLists.Queries.GetTodos;
+using FileManager.Application.Files.Queries.GetFileDetails;
+using FileManager.Application.Files.Queries.GetFilesWithFiltersQuery;
 using FileManager.Domain.Entities;
 using NUnit.Framework;
 
@@ -30,11 +30,8 @@ public class MappingTests
     }
 
     [Test]
-    [TestCase(typeof(TodoList), typeof(TodoListDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemDto))]
-    [TestCase(typeof(TodoList), typeof(LookupDto))]
-    [TestCase(typeof(TodoItem), typeof(LookupDto))]
-    [TestCase(typeof(TodoItem), typeof(TodoItemBriefDto))]
+    [TestCase(typeof(FileDto), typeof(FileDto))]
+    [TestCase(typeof(FileDetailsDto), typeof(FileDetailsDto))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {
         var instance = GetInstanceOf(source);
